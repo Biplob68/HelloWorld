@@ -20,13 +20,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PrimitiveIterator;
 
+import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //@WebMvcTest(UserController.class)
 @ExtendWith(MockitoExtension.class)
@@ -47,7 +55,7 @@ public class UserControllerTest {
     private UserConverter userConverter;
     @Mock
     private ApiResponseConverter apiResponseConverter;
-    private ApiResponse apiResponse;
+    //private ApiResponse apiResponse;
     private UserDto userDto1;
 
     @BeforeEach
@@ -67,11 +75,12 @@ public class UserControllerTest {
 //        userDtoList.add(new UserDto(3L, "Biplob", "Mina", "biplob1@gmail.com", "01521xxx", Boolean.TRUE));
 
         userDto1 = new UserDto(1l, "Hridoy", "Mina", "hridoy@gmail.com", "01521xxx", Boolean.TRUE);
-        apiResponse = new ApiResponse("User is successfully saved!", user, HttpStatus.SUCCESS);
+        //ApiResponse apiResponse = new ApiResponse("User is successfully saved!", user, HttpStatus.SUCCESS);
     }
 
     @Test
     public void saveUserTest(){
+        ApiResponse apiResponse = new ApiResponse("User is successfully saved!", user, HttpStatus.SUCCESS);
         Mockito.when(userConverter.UserDtoToEntity(userDto1)).thenReturn(user);
         Mockito.when(userService.saveUser(user)).thenReturn(user);
         Mockito.when(userConverter.UserEntityToDTO(user)).thenReturn(userDto1);
@@ -83,17 +92,32 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUsersTest(){
-        //apiResponse = new ApiResponse("User is successfully saved!", List.of(user, user1), HttpStatus.SUCCESS);
+    public void getUsers_Test(){
         List<UserDto> userDtoList = new ArrayList<UserDto>();
         userDtoList.add(new UserDto(1L, "Biplob", "Mina", "biplob@gmail.com", "01521xxx", Boolean.TRUE));
         userDtoList.add(new UserDto(2L, "Biplob", "Mina", "biplob1@gmail.com", "01521xxx", Boolean.TRUE));
 
+        ApiResponse apiResponse = new ApiResponse("Users are successfully found!", userDtoList, HttpStatus.SUCCESS);
+
         Mockito.when(userService.getUsers()).thenReturn(List.of(user,user1));
         Mockito.when(userConverter.UserEntityToDTO(List.of(user,user1))).thenReturn(userDtoList);
-        Mockito.when(apiResponseConverter.DtoToResponse(userDtoList, "User is successfully saved!", "User not found!")).thenReturn(apiResponse);
+        Mockito.when(apiResponseConverter.DtoToResponse(userDtoList, "Users are successfully found!", "User not found!")).thenReturn(apiResponse);
 
         ApiResponse apiResponse1 = userController.getUsers();
+
+        Assertions.assertEquals(apiResponse1, apiResponse);
+        Assertions.assertEquals(apiResponse1.getStatus(), apiResponse.getStatus());
+    }
+    @Test
+    public void getUserById_Test(){
+        userDto = new UserDto(1l, "Hridoy", "Mina", "hridoy@gmail.com", "01521xxx", Boolean.TRUE);
+        ApiResponse apiResponse = new ApiResponse("User is successfully found!", user, HttpStatus.SUCCESS);
+
+        Mockito.when(userService.getUserById(1L)).thenReturn(user);
+        Mockito.when(userConverter.UserEntityToDTO(user)).thenReturn(userDto);
+        Mockito.when(apiResponseConverter.DtoToResponse(userDto, "User is successfully found!", "User not found!")).thenReturn(apiResponse);
+
+        ApiResponse apiResponse1 = userController.getUserById(1L);
 
         Assertions.assertEquals(apiResponse1, apiResponse);
     }
