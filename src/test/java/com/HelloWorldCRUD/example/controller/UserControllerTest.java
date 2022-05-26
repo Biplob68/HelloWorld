@@ -122,5 +122,16 @@ public class UserControllerTest {
         Assertions.assertEquals(apiResponse1, apiResponse);
     }
 
+    @Test
+    public void getUserByEmail_Test(){
+        ApiResponse apiResponse = new ApiResponse("User successfully found!", user, HttpStatus.SUCCESS);
+        Mockito.when(userService.getUserByEmail(user.getEmail())).thenReturn(user);
+        Mockito.when(apiResponseConverter.DtoToResponse(user, "User successfully found!", "User not found!")).thenReturn(apiResponse);
+
+        ApiResponse apiResponse1 = userController.getUserByEmail(user.getEmail());
+
+        Assertions.assertEquals(apiResponse1, apiResponse);
+    }
+
 
 }

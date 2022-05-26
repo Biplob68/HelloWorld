@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping("/users/email")
     public ApiResponse getUserByEmail(@RequestParam String email){
-        return apiResponseConverter.DtoToResponse(service.getUserByEmail(email), "User successfully found", "User not found!");
+        return apiResponseConverter.DtoToResponse(service.getUserByEmail(email), "User successfully found!", "User not found!");
     }
 
     @GetMapping("/users/fname")
