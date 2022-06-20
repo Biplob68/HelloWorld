@@ -27,7 +27,12 @@ public class UserController {
     @Autowired
     private ApiResponseConverter apiResponseConverter;
 
-    //  Method to save all user into database
+    @GetMapping("/")
+    public String homepage(){
+        return "Welcome to the application!!";
+    }
+
+    //  Method to save a user into database
     @PostMapping("/users")
     public ApiResponse saveUser(@RequestBody UserDto userDto){
         return apiResponseConverter.DtoToResponse(converter.UserEntityToDTO(service.saveUser(converter.UserDtoToEntity(userDto))),"User is successfully saved!","User not found!");

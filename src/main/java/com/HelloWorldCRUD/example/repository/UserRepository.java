@@ -13,6 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByLastName(String lastname);
     List<User> findByIsActiveTrue();
 
-   // Optional<User> findByUsername(String testuser_sql);
     //List<User> findByUSerFirstNameIgnoreCase(String fname);
 }

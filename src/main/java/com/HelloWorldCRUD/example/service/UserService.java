@@ -16,4 +16,5 @@ public interface UserService {
     User updateUser(User user, long id);
     User deactivateUser(long id);
     List<User> getActiveUsers();
+
 }

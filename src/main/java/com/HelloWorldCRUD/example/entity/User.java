@@ -1,9 +1,6 @@
 package com.HelloWorldCRUD.example.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -11,6 +8,8 @@ import javax.persistence.*;
 @Component
 @Entity
 @Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
@@ -28,6 +27,10 @@ public class User {
     private String email;
 
     private String mobileNo;
+
+//    @Column(length = 60)
+//    private String passWord;
+//    private String role;
 
     private Boolean isActive = Boolean.TRUE;
 }
